@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Логика и Сенсорика v6.1</title>
+    <title>Логика и Сенсорика v7.3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
@@ -33,9 +33,9 @@
         }
 
         /* --- Menu Cards --- */
-        .menu-grid { display: flex; justify-content: center; gap: 40px; margin-top: 50px; }
+        .menu-grid { display: flex; justify-content: center; gap: 30px; margin-top: 50px; flex-wrap: wrap; }
         .menu-card {
-            width: 300px; height: 200px;
+            width: 280px; height: 220px;
             background: white;
             border-radius: 30px;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -46,7 +46,7 @@
         }
         .menu-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(2, 119, 189, 0.25); border-color: #4FC3F7; }
         .card-icon { font-size: 4rem; margin-bottom: 15px; }
-        .card-text { font-size: 1.5rem; font-weight: 800; color: #455A64; }
+        .card-text { font-size: 1.4rem; font-weight: 800; color: #455A64; text-align: center; line-height: 1.2;}
 
         /* --- Game Container --- */
         .game-view { display: flex; flex-direction: column; height: 100vh; }
@@ -66,97 +66,78 @@
         .toggle-group { display: flex; align-items: center; gap: 5px; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
         .checkbox { width: 20px; height: 20px; accent-color: #039BE5; }
 
-        /* --- Game 1: Dienes Blocks 3D --- */
+        /* --- Game 1: Dienes Blocks --- */
         .dienes-container { transition: transform 0.3s; }
-        
-        /* Riddle Cards */
         .riddle-grid { display: flex; gap: 20px; margin-bottom: 30px; justify-content: center; width: 100%; max-width: 900px; flex-wrap: wrap; }
         .riddle-card {
-            width: 160px; height: 200px;
-            background: white;
-            border: 4px solid #CFD8DC;
-            border-radius: 20px;
+            width: 140px; height: 140px;
+            background: white; border: 3px solid #CFD8DC; border-radius: 15px;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            position: relative;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            overflow: hidden;
-            transition: transform 0.3s;
+            position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow: hidden;
         }
-        .riddle-card:hover { transform: translateY(-5px); }
         .negation-cross {
             position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><line x1='10' y1='10' x2='90' y2='90' stroke='%23D32F2F' stroke-width='8' stroke-linecap='round'/><line x1='90' y1='10' x2='10' y2='90' stroke='%23D32F2F' stroke-width='8' stroke-linecap='round'/></svg>") no-repeat center center;
-            background-size: 80% 80%;
-            opacity: 0.8;
-            z-index: 10;
+            background-size: 80% 80%; opacity: 0.8; z-index: 10;
         }
-        .card-label {
-            position: absolute; bottom: 10px;
-            font-size: 0.9rem; font-weight: 800; color: #90A4AE;
-            text-transform: uppercase;
-        }
-        
-        /* 3D Shapes CSS Helpers */
+        .card-label { position: absolute; bottom: 5px; font-size: 0.8rem; font-weight: bold; color: #90A4AE; text-transform: uppercase; }
         .shape-face { stroke: rgba(0,0,0,0.1); stroke-width: 1px; }
-        /* Side is darker to fake 3D */
         .shape-side { stroke: rgba(0,0,0,0.1); stroke-width: 1px; filter: brightness(0.85); }
 
         /* --- Game 2: Color Code --- */
         .btn-3d {
-            border-radius: 50%;
-            transition: transform 0.1s;
+            border-radius: 50%; transition: transform 0.1s;
             box-shadow: 0 8px 0 rgba(0,0,0,0.2), 0 15px 20px rgba(0,0,0,0.1);
-            position: relative;
-            border: 4px solid rgba(255,255,255,0.4);
+            position: relative; border: 4px solid rgba(255,255,255,0.4);
             display: flex; justify-content: center; align-items: center;
         }
-        /* Number Badge */
         .btn-number {
-            position: absolute;
-            top: -45px;
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: #546E7A;
-            background: rgba(255,255,255,0.8);
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            z-index: 10;
+            position: absolute; top: -35px; font-size: 1.5rem; font-weight: 900; color: #546E7A;
+            background: white; width: 40px; height: 40px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; z-index: 10;
         }
-        
-        /* Colors */
         .btn-red { background: #FF5252; box-shadow: 0 8px 0 #D32F2F; }
         .btn-yellow { background: #FFEB3B; box-shadow: 0 8px 0 #FBC02D; }
         .btn-blue { background: #2196F3; box-shadow: 0 8px 0 #1976D2; }
         .btn-green { background: #4CAF50; box-shadow: 0 8px 0 #388E3C; }
         .btn-pink { background: #F48FB1; box-shadow: 0 8px 0 #C2185B; }
-        .btn-purple { background: #AB47BC; box-shadow: 0 8px 0 #8E24AA; }
-        .btn-orange { background: #FF9800; box-shadow: 0 8px 0 #F57C00; }
         .btn-black { background: #37474F; box-shadow: 0 8px 0 #263238; }
-
+        
         .seq-container { 
-            display: flex; gap: 50px; padding: 60px; 
-            background: rgba(255,255,255,0.6); border-radius: 40px; 
-            transition: all 0.5s; 
-            align-items: center; justify-content: center;
-            flex-wrap: wrap;
-            max-width: 90%;
+            display: flex; gap: 40px; padding: 60px; 
+            background: rgba(255,255,255,0.7); border-radius: 40px; 
+            transition: all 0.5s; align-items: center; justify-content: center; flex-wrap: wrap; max-width: 90%;
         }
         .seq-vertical { flex-direction: column; }
-        
-        /* Fixed Sizes for Alignment */
         .size-mode-lg { width: 100px; height: 100px; }
         .size-mode-sm { width: 60px; height: 60px; }
-        /* Placeholder to align small items in grid of large items */
-        .size-wrapper {
-            width: 100px; height: 100px;
+        .size-wrapper { width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; position: relative; }
+
+        /* --- Game 3: Cups (Built-in Images Mode) --- */
+        .cup-card {
+            width: 150px; height: 180px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             display: flex; justify-content: center; align-items: center;
-            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+            border: 5px solid transparent;
         }
+        .cup-card.border-red { border-color: #FF5252; }
+        .cup-card.border-yellow { border-color: #FFEB3B; }
+        .cup-card.border-blue { border-color: #2196F3; }
+        
+        /* Simulating "My Images" using styled content */
+        .cup-content { font-size: 5rem; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); }
+        
+        /* Layouts */
+        .cups-row { display: flex; gap: 30px; align-items: flex-end; }
+        .cups-tower { display: flex; flex-direction: column-reverse; gap: 10px; }
+        .cups-pyramid { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .pyramid-row { display: flex; gap: 10px; justify-content: center; }
 
         .hidden { display: none !important; }
-        
-        /* Animation */
         @keyframes pop { 0% { transform: scale(0); opacity: 0; } 70% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
         .animate-pop { animation: pop 0.5s ease-out forwards; }
     </style>
@@ -172,13 +153,16 @@
             <div onclick="openGame(1)" class="menu-card border-b-8 border-blue-400">
                 <div class="card-icon">🔷🔴</div>
                 <div class="card-text">Блоки Дьенеша</div>
-                <div class="text-sm text-gray-400 mt-2">Фигура, Цвет, 3D, Отрицание</div>
             </div>
             
             <div onclick="openGame(2)" class="menu-card border-b-8 border-green-400">
                 <div class="card-icon">🎨🔢</div>
                 <div class="card-text">Цветовой Код</div>
-                <div class="text-sm text-gray-400 mt-2">Ряды с цифрами</div>
+            </div>
+
+            <div onclick="openGame(3)" class="menu-card border-b-8 border-red-400">
+                <div class="card-icon">🥤🏗️</div>
+                <div class="card-text">Цветные Стаканчики</div>
             </div>
         </div>
     </div>
@@ -189,7 +173,6 @@
             <button onclick="backToMenu()" class="btn-back"><i class="fas fa-arrow-left"></i> Меню</button>
             <div class="settings-panel">
                 <label class="toggle-group text-red-500 bg-red-50 px-3 py-1 rounded-full"><input type="checkbox" id="g1-negation" class="checkbox" onchange="toggleNegationSettings()"> 🚫 Схема (Отрицание)</label>
-                <!-- These are hidden in negation mode as schema implies ALL properties are checked -->
                 <div id="g1-props" class="flex gap-2 items-center ml-4">
                     <div class="border-l border-gray-300 mx-2 h-6"></div>
                     <label class="toggle-group"><input type="checkbox" id="g1-shape" checked class="checkbox"> Фигура</label>
@@ -199,9 +182,7 @@
                 </div>
             </div>
         </div>
-        <div class="canvas flex-col" id="canvas-1">
-            <!-- Content -->
-        </div>
+        <div class="canvas flex-col" id="canvas-1"></div>
         <div class="text-center pb-5 text-gray-400 font-bold text-xl flex justify-center gap-4">
             <span>Нажми ПРОБЕЛ для новой фигуры</span>
             <button id="g1-reveal-btn" class="hidden bg-blue-500 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:bg-blue-600 transition" onclick="revealAnswer()">👁️ Ответ</button>
@@ -222,29 +203,51 @@
                 <input type="range" id="g2-count" min="2" max="6" value="3" class="w-20">
             </div>
         </div>
-        <div class="canvas" id="canvas-2">
-            <!-- Content -->
-        </div>
+        <div class="canvas" id="canvas-2"></div>
         <div class="text-center pb-5 text-gray-400 font-bold text-xl">Нажми ПРОБЕЛ для генерации</div>
+    </div>
+
+    <!-- Game 3: Cups (Custom Images Mode) -->
+    <div id="game-3" class="game-view hidden">
+        <div class="header">
+            <button onclick="backToMenu()" class="btn-back"><i class="fas fa-arrow-left"></i> Меню</button>
+            <div class="settings-panel">
+                <span class="text-red-500 font-bold mr-2">Режим:</span>
+                <label class="toggle-group bg-gray-100 px-2 rounded"><input type="radio" name="g3-mode" value="row" checked class="checkbox"> Ряд</label>
+                <label class="toggle-group bg-gray-100 px-2 rounded"><input type="radio" name="g3-mode" value="tower" class="checkbox"> Башня</label>
+                <label class="toggle-group bg-gray-100 px-2 rounded"><input type="radio" name="g3-mode" value="pyramid" class="checkbox"> Пирамида</label>
+                <div class="border-l border-gray-300 mx-2 h-6"></div>
+                <span class="text-sm font-bold">Кол-во:</span>
+                <input type="range" id="g3-count" min="3" max="6" value="3" class="w-20">
+            </div>
+        </div>
+        <div class="canvas" id="canvas-3"></div>
+        <div class="text-center pb-5 text-gray-400 font-bold text-xl">Нажми ПРОБЕЛ для новой схемы</div>
     </div>
 
     <script>
         let currentGame = 0;
         let currentAnswerSvg = ''; 
 
-        // --- Data ---
-        // Dienes
+        // Data
         const shapes = ['circle', 'square', 'triangle', 'rect'];
         const colorsDienes = [
             { hex: '#FF5252', name: 'Красный' }, 
             { hex: '#FFEB3B', name: 'Желтый' }, 
             { hex: '#2196F3', name: 'Синий' }
         ]; 
+        // Color Code: Only 5 colors
+        const colorsCode = ['btn-red', 'btn-yellow', 'btn-blue', 'btn-green', 'btn-pink'];
         
-        // Color Code - ADDED Purple and Orange
-        const colorsCode = ['btn-red', 'btn-yellow', 'btn-blue', 'btn-green', 'btn-pink', 'btn-purple', 'btn-orange'];
+        // Cups Colors (Internal Logic) - these simulate "user images" if no file loaded
+        // In real use, user would replace these icons with <img src="red_toy.png"> etc.
+        const cupsPalette = [
+            { id: 'red', border: 'border-red', content: '<i class="fas fa-cube text-red-500 cup-content"></i>' }, // Red Cube
+            { id: 'yellow', border: 'border-yellow', content: '<i class="fas fa-star text-yellow-400 cup-content"></i>' }, // Yellow Star
+            { id: 'blue', border: 'border-blue', content: '<i class="fas fa-shapes text-blue-500 cup-content"></i>' } // Blue Shapes
+        ];
 
-        // --- Navigation ---
+        // Navigation
         function openGame(id) {
             currentGame = id;
             document.getElementById('main-menu').classList.add('hidden');
@@ -267,18 +270,18 @@
         });
 
         document.querySelectorAll('input').forEach(el => {
-            el.addEventListener('change', () => {
-                if(currentGame !== 0 && el.id !== 'g1-negation') generate(); // Negation triggers via onchange
-            });
+            if(el.type !== 'file') {
+                el.addEventListener('change', () => {
+                    if(currentGame !== 0 && el.id !== 'g1-negation') generate();
+                });
+            }
         });
 
         function toggleNegationSettings() {
-            // When negation is on, we usually assume all props are active for the schema
             const isNeg = document.getElementById('g1-negation').checked;
             const propsDiv = document.getElementById('g1-props');
             if(isNeg) {
                propsDiv.classList.add('opacity-50', 'pointer-events-none');
-               // Check all for schema
                document.getElementById('g1-shape').checked = true;
                document.getElementById('g1-color').checked = true;
                document.getElementById('g1-size').checked = true;
@@ -292,9 +295,10 @@
         function generate() {
             if(currentGame === 1) generateDienes();
             if(currentGame === 2) generateCode();
+            if(currentGame === 3) generateCups();
         }
 
-        // --- Game 1: Dienes Logic (3D SVG) ---
+        // --- Game 1: Dienes ---
         function generateDienes() {
             const canvas = document.getElementById('canvas-1');
             const btnReveal = document.getElementById('g1-reveal-btn');
@@ -307,59 +311,42 @@
 
             btnReveal.classList.add('hidden');
 
-            // Generate TARGET Props
             const targetShape = useShape ? shapes[Math.floor(Math.random() * shapes.length)] : 'circle';
             const targetColorObj = useColor ? colorsDienes[Math.floor(Math.random() * 3)] : {hex: '#B0BEC5', name: 'Серый'};
             const targetIsLarge = useSize ? Math.random() > 0.5 : true; 
             const targetIsThick = useThick ? Math.random() > 0.5 : false; 
 
-            // --- 3D SVG Generation for Target ---
-            // "Thick" adds depth.
             const depth = targetIsThick ? 60 : 10;
-            const sizeScale = targetIsLarge ? 1.2 : 0.7; // Visible difference
+            const sizeScale = targetIsLarge ? 1.2 : 0.7;
             
             let svg = '';
             const fill = targetColorObj.hex;
             const cx = 200, cy = 200;
             
-            // Draw function helper
             const draw3D = () => {
                 let s = '';
                 if (targetShape === 'circle') {
                     const r = 70 * sizeScale;
-                    // Side
                     s += `<path d="M${cx-r},${cy} A${r},${r/2} 0 0,0 ${cx+r},${cy} L${cx+r},${cy+depth} A${r},${r/2} 0 0,1 ${cx-r},${cy+depth} Z" fill="${fill}" class="shape-side" />`;
-                    // Bottom
                     s += `<ellipse cx="${cx}" cy="${cy+depth}" rx="${r}" ry="${r/2}" fill="${fill}" class="shape-side"/>`;
-                    // Top
                     s += `<ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r/2}" fill="${fill}" class="shape-face" />`;
                 } else if (targetShape === 'square') {
-                    const w = 120 * sizeScale;
-                    const x = cx - w/2; const y = cy - w/3; // slight perspective shift
-                    // Side Right
+                    const w = 120 * sizeScale; const x = cx - w/2; const y = cy - w/3;
                     s += `<path d="M${x+w},${y} L${x+w+depth/2},${y-depth/2} L${x+w+depth/2},${y+w-depth/2} L${x+w},${y+w} Z" fill="${fill}" class="shape-side" />`;
-                    // Side Top
                     s += `<path d="M${x},${y} L${x+depth/2},${y-depth/2} L${x+w+depth/2},${y-depth/2} L${x+w},${y} Z" fill="${fill}" class="shape-side" />`;
-                    // Front
                     s += `<rect x="${x}" y="${y}" width="${w}" height="${w}" fill="${fill}" class="shape-face" />`;
                 } else if (targetShape === 'rect') {
-                    const w = 160 * sizeScale; const h = 80 * sizeScale;
-                    const x = cx - w/2; const y = cy - h/2;
-                    // Side Right
+                    const w = 160 * sizeScale; const h = 80 * sizeScale; const x = cx - w/2; const y = cy - h/2;
                     s += `<path d="M${x+w},${y} L${x+w+depth/2},${y-depth/2} L${x+w+depth/2},${y+h-depth/2} L${x+w},${y+h} Z" fill="${fill}" class="shape-side" />`;
-                    // Side Top
                     s += `<path d="M${x},${y} L${x+depth/2},${y-depth/2} L${x+w+depth/2},${y-depth/2} L${x+w},${y} Z" fill="${fill}" class="shape-side" />`;
-                    // Front
                     s += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" class="shape-face" />`;
                 } else if (targetShape === 'triangle') {
                     const triSide = 140 * sizeScale; 
-                    const p1 = {x: cx, y: cy - triSide/1.5}; // Top
-                    const p2 = {x: cx + triSide/1.2, y: cy + triSide/2}; // Bottom Right
-                    const p3 = {x: cx - triSide/1.2, y: cy + triSide/2}; // Bottom Left
+                    const p1 = {x: cx, y: cy - triSide/1.5};
+                    const p2 = {x: cx + triSide/1.2, y: cy + triSide/2};
+                    const p3 = {x: cx - triSide/1.2, y: cy + triSide/2};
                     const d = depth/2;
-                    // Side Right (approx)
                     s += `<path d="M${p1.x},${p1.y} L${p1.x+d},${p1.y-d} L${p2.x+d},${p2.y-d} L${p2.x},${p2.y} Z" fill="${fill}" class="shape-side" />`;
-                    // Front
                     s += `<polygon points="${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}" fill="${fill}" class="shape-face" />`;
                 }
                 return s;
@@ -367,24 +354,20 @@
             
             currentAnswerSvg = draw3D();
 
-            // --- Logic Mode: Riddle Scheme ---
             if (useNegation) {
                 btnReveal.classList.remove('hidden');
-                
                 let riddleCards = '';
                 const createCard = (contentHtml, isNot, label_text) => `
                     <div class="riddle-card animate-pop">
-                        <div class="flex items-center justify-center h-full w-full p-2">
-                            ${contentHtml}
-                        </div>
+                        <div class="flex items-center justify-center h-full w-full p-2">${contentHtml}</div>
                         ${isNot ? '<div class="negation-cross"></div>' : ''}
                         <div class="card-label">${label_text}</div>
                     </div>
                 `;
 
-                // 1. Color Card
+                // 1. Color
                 {
-                    let isNot = Math.random() > 0.3; // Make negations frequent
+                    let isNot = Math.random() > 0.3;
                     let displayColor = targetColorObj.hex;
                     if(isNot) {
                         const others = colorsDienes.filter(c => c.hex !== targetColorObj.hex);
@@ -392,8 +375,7 @@
                     }
                     riddleCards += createCard(`<div class="w-16 h-16 rounded-full" style="background:${displayColor}"></div>`, isNot, 'Цвет');
                 }
-
-                // 2. Shape Card
+                // 2. Shape
                 {
                     let isNot = Math.random() > 0.3;
                     let displayShape = targetShape;
@@ -401,74 +383,44 @@
                         const others = shapes.filter(s => s !== targetShape);
                         displayShape = others[Math.floor(Math.random()*others.length)];
                     }
-                    // Simple shapes for icon
                     let shapeIcon = '';
                     if(displayShape==='circle') shapeIcon='<div class="w-16 h-16 rounded-full bg-gray-400"></div>';
                     if(displayShape==='square') shapeIcon='<div class="w-16 h-16 bg-gray-400"></div>';
                     if(displayShape==='triangle') shapeIcon='<div style="width:0;height:0;border-left:35px solid transparent;border-right:35px solid transparent;border-bottom:60px solid #9CA3AF;"></div>';
                     if(displayShape==='rect') shapeIcon='<div class="w-20 h-12 bg-gray-400"></div>';
-                    
                     riddleCards += createCard(shapeIcon, isNot, 'Фигура');
                 }
-
-                // 3. Size Card (House)
+                // 3. Size
                 {
                     let isNot = Math.random() > 0.3;
                     let showLarge = targetIsLarge;
-                    if(isNot) showLarge = !targetIsLarge; // If negated, show the Opposite to negate
-                    
-                    // Icons
-                    const iconLarge = `
-                        <div class="text-center">
-                            <i class="fas fa-building text-5xl text-gray-600"></i>
-                        </div>`;
-                    const iconSmall = `
-                        <div class="text-center">
-                            <i class="fas fa-home text-3xl text-gray-600"></i>
-                        </div>`;
-                        
+                    if(isNot) showLarge = !targetIsLarge;
+                    const iconLarge = `<div class="text-center"><i class="fas fa-building text-5xl text-gray-600"></i></div>`;
+                    const iconSmall = `<div class="text-center"><i class="fas fa-home text-3xl text-gray-600"></i></div>`;
                     riddleCards += createCard(showLarge ? iconLarge : iconSmall, isNot, 'Размер');
                 }
-
-                // 4. Thick Card (People)
+                // 4. Thickness
                 {
                     let isNot = Math.random() > 0.3;
                     let showThick = targetIsThick;
                     if(isNot) showThick = !targetIsThick;
-                    
-                    // Icons: Fat Man vs Thin Man
-                    const iconFat = `
-                        <div class="flex flex-col items-center">
-                            <i class="fas fa-child text-5xl text-gray-700" style="transform: scaleX(2.5);"></i>
-                        </div>`;
-                    const iconThin = `
-                        <div class="flex flex-col items-center">
-                            <i class="fas fa-child text-5xl text-gray-700" style="transform: scaleX(0.7);"></i>
-                        </div>`;
-                    
-                    riddleCards += createCard(showThick ? iconFat : iconThin, isNot, 'Толщина');
+                    const iconThick = `<div class="flex flex-col items-center"><i class="fas fa-child text-5xl text-gray-700" style="transform: scaleX(2.5);"></i></div>`;
+                    const iconThin = `<div class="flex flex-col items-center"><i class="fas fa-child text-5xl text-gray-700" style="transform: scaleX(0.7);"></i></div>`;
+                    riddleCards += createCard(showThick ? iconThick : iconThin, isNot, 'Толщина');
                 }
 
                 canvas.innerHTML = `
-                    <div id="riddle-view" class="flex flex-col items-center justify-center flex-grow">
-                        <div class="riddle-grid">${riddleCards}</div>
-                    </div>
+                    <div id="riddle-view" class="flex flex-col items-center justify-center flex-grow"><div class="riddle-grid">${riddleCards}</div></div>
                     <div id="answer-view" class="hidden animate-pop flex-grow flex items-center justify-center">
                         <div class="dienes-container relative flex justify-center items-center" style="width: 400px; height: 400px;">
-                            <svg viewBox="0 0 400 400" style="overflow: visible; width:100%; height:100%;">
-                                ${currentAnswerSvg}
-                            </svg>
+                            <svg viewBox="0 0 400 400" style="overflow: visible; width:100%; height:100%;">${currentAnswerSvg}</svg>
                         </div>
                     </div>
                 `;
-
             } else {
-                // Standard Direct View
                 canvas.innerHTML = `
                     <div class="dienes-container relative flex justify-center items-center animate-pop flex-grow" style="width: 400px; height: 400px;">
-                        <svg viewBox="0 0 400 400" style="overflow: visible; width:100%; height:100%;">
-                            ${currentAnswerSvg}
-                        </svg>
+                        <svg viewBox="0 0 400 400" style="overflow: visible; width:100%; height:100%;">${currentAnswerSvg}</svg>
                     </div>
                 `;
             }
@@ -479,7 +431,7 @@
             document.getElementById('answer-view').classList.remove('hidden');
         }
 
-        // --- Game 2: Color Code Logic ---
+        // --- Game 2: Color Code ---
         function generateCode() {
             const canvas = document.getElementById('canvas-2');
             const isVertical = document.getElementById('g2-vertical').checked;
@@ -491,27 +443,80 @@
             if (mode === 'color') {
                 for(let i=0; i<count; i++) {
                     const c = colorsCode[Math.floor(Math.random() * colorsCode.length)];
-                    html += `
-                        <div class="size-wrapper animate-pop" style="animation-delay: ${i*0.1}s">
-                            <div class="btn-3d ${c} size-mode-lg">
-                                <div class="btn-number">${i+1}</div>
-                            </div>
-                        </div>`;
+                    html += `<div class="size-wrapper animate-pop" style="animation-delay: ${i*0.1}s"><div class="btn-3d ${c} size-mode-lg"><div class="btn-number">${i+1}</div></div></div>`;
                 }
             } else {
                 for(let i=0; i<count; i++) {
                     const isBig = Math.random() > 0.5;
                     const sizeClass = isBig ? 'size-mode-lg' : 'size-mode-sm';
-                    html += `
-                        <div class="size-wrapper animate-pop" style="animation-delay: ${i*0.1}s">
-                            <div class="btn-3d btn-black ${sizeClass} flex items-center justify-center">
-                                <div class="btn-number">${i+1}</div>
-                            </div>
-                        </div>`;
+                    html += `<div class="size-wrapper animate-pop" style="animation-delay: ${i*0.1}s"><div class="btn-3d btn-black ${sizeClass} flex items-center justify-center"><div class="btn-number">${i+1}</div></div></div>`;
                 }
             }
-
             html += `</div>`;
+            canvas.innerHTML = html;
+        }
+
+        // --- Game 3: Colored Cups ---
+        function generateCups() {
+            const canvas = document.getElementById('canvas-3');
+            const mode = document.querySelector('input[name="g3-mode"]:checked').value;
+            const count = parseInt(document.getElementById('g3-count').value);
+            
+            let html = '';
+            
+            // Logic to prevent repeat colors (if count <= 3)
+            const getUniqueColors = (n) => {
+                let pool = [...cupsPalette];
+                let result = [];
+                for(let i=0; i<n; i++) {
+                    if(pool.length === 0) pool = [...cupsPalette]; // refill if needed
+                    const idx = Math.floor(Math.random() * pool.length);
+                    // Avoid immediate repeat if pool refilled
+                    if(result.length > 0 && pool[idx].id === result[result.length-1].id && pool.length > 1) {
+                        // try next
+                        const nextIdx = (idx + 1) % pool.length;
+                        result.push(pool[nextIdx]);
+                        pool.splice(nextIdx, 1);
+                    } else {
+                        result.push(pool[idx]);
+                        pool.splice(idx, 1);
+                    }
+                }
+                return result;
+            };
+
+            const createCup = (colorObj, delay) => {
+                // Use "built-in" icons (images) instead of cups
+                return `<div class="cup-card ${colorObj.border} animate-pop" style="animation-delay:${delay}s">
+                            ${colorObj.content}
+                        </div>`;
+            };
+
+            // Generate Colors sequence
+            
+            if (mode === 'row') {
+                const colors = getUniqueColors(count);
+                html = `<div class="cups-row">`;
+                colors.forEach((c, i) => html += createCup(c, i*0.1));
+                html += `</div>`;
+            } else if (mode === 'tower') {
+                const colors = getUniqueColors(count);
+                html = `<div class="cups-tower">`;
+                colors.forEach((c, i) => html += createCup(c, i*0.1));
+                html += `</div>`;
+            } else if (mode === 'pyramid') {
+                html = `<div class="cups-pyramid">`;
+                for(let row=count; row>=1; row--) {
+                    const rowColors = getUniqueColors(row); 
+                    html += `<div class="pyramid-row">`;
+                    rowColors.forEach((c, i) => {
+                        html += createCup(c, (count-row)*0.1);
+                    });
+                    html += `</div>`;
+                }
+                html += `</div>`;
+            }
+
             canvas.innerHTML = html;
         }
 
