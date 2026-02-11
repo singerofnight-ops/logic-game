@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Логика и Сенсорика v7.3</title>
+    <title>Логика и Сенсорика v7.4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
@@ -68,6 +68,30 @@
 
         /* --- Game 1: Dienes Blocks --- */
         .dienes-container { transition: transform 0.3s; }
+        
+        /* Tower View Layouts */
+        .tower-container {
+            display: flex; flex-direction: column; gap: 20px; align-items: center; width: 100%;
+        }
+        .view-panel {
+            background: rgba(255,255,255,0.8);
+            border-radius: 20px;
+            padding: 30px;
+            border: 3px solid #B3E5FC;
+            display: flex; justify-content: center; align-items: center;
+            min-width: 300px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        .view-label {
+            position: absolute; top: -15px; left: 20px;
+            background: #0288D1; color: white;
+            padding: 5px 15px; border-radius: 15px;
+            font-size: 0.9rem; font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Riddle Cards */
         .riddle-grid { display: flex; gap: 20px; margin-bottom: 30px; justify-content: center; width: 100%; max-width: 900px; flex-wrap: wrap; }
         .riddle-card {
             width: 140px; height: 140px;
@@ -81,8 +105,9 @@
             background-size: 80% 80%; opacity: 0.8; z-index: 10;
         }
         .card-label { position: absolute; bottom: 5px; font-size: 0.8rem; font-weight: bold; color: #90A4AE; text-transform: uppercase; }
-        .shape-face { stroke: rgba(0,0,0,0.1); stroke-width: 1px; }
-        .shape-side { stroke: rgba(0,0,0,0.1); stroke-width: 1px; filter: brightness(0.85); }
+        
+        .shape-face { stroke: rgba(0,0,0,0.3); stroke-width: 2px; }
+        .shape-side { stroke: rgba(0,0,0,0.3); stroke-width: 2px; filter: brightness(0.85); }
 
         /* --- Game 2: Color Code --- */
         .btn-3d {
@@ -113,7 +138,7 @@
         .size-mode-sm { width: 60px; height: 60px; }
         .size-wrapper { width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; position: relative; }
 
-        /* --- Game 3: Cups (Built-in Images Mode) --- */
+        /* --- Game 3: Cups --- */
         .cup-card {
             width: 150px; height: 180px;
             background: white;
@@ -128,10 +153,8 @@
         .cup-card.border-yellow { border-color: #FFEB3B; }
         .cup-card.border-blue { border-color: #2196F3; }
         
-        /* Simulating "My Images" using styled content */
         .cup-content { font-size: 5rem; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2)); }
         
-        /* Layouts */
         .cups-row { display: flex; gap: 30px; align-items: flex-end; }
         .cups-tower { display: flex; flex-direction: column-reverse; gap: 10px; }
         .cups-pyramid { display: flex; flex-direction: column; align-items: center; gap: 10px; }
@@ -172,7 +195,11 @@
         <div class="header">
             <button onclick="backToMenu()" class="btn-back"><i class="fas fa-arrow-left"></i> Меню</button>
             <div class="settings-panel">
+                <label class="toggle-group text-blue-600 bg-blue-50 px-3 py-1 rounded-full"><input type="checkbox" id="g1-tower" class="checkbox" onchange="toggleTowerMode()"> 🏗️ Башня (Сверху/Сбоку)</label>
+                <div class="border-l border-gray-300 mx-2 h-6"></div>
                 <label class="toggle-group text-red-500 bg-red-50 px-3 py-1 rounded-full"><input type="checkbox" id="g1-negation" class="checkbox" onchange="toggleNegationSettings()"> 🚫 Схема (Отрицание)</label>
+                
+                <!-- Standard Props -->
                 <div id="g1-props" class="flex gap-2 items-center ml-4">
                     <div class="border-l border-gray-300 mx-2 h-6"></div>
                     <label class="toggle-group"><input type="checkbox" id="g1-shape" checked class="checkbox"> Фигура</label>
@@ -184,7 +211,7 @@
         </div>
         <div class="canvas flex-col" id="canvas-1"></div>
         <div class="text-center pb-5 text-gray-400 font-bold text-xl flex justify-center gap-4">
-            <span>Нажми ПРОБЕЛ для новой фигуры</span>
+            <span>Нажми ПРОБЕЛ для нового задания</span>
             <button id="g1-reveal-btn" class="hidden bg-blue-500 text-white px-6 py-2 rounded-full font-bold shadow-lg hover:bg-blue-600 transition" onclick="revealAnswer()">👁️ Ответ</button>
         </div>
     </div>
@@ -196,8 +223,18 @@
             <div class="settings-panel">
                 <label class="toggle-group"><input type="checkbox" id="g2-vertical" class="checkbox"> Вертикально</label>
                 <div class="border-l border-gray-300 mx-2 h-6"></div>
-                <label class="toggle-group bg-gray-100 px-2 rounded"><input type="radio" name="g2-mode" value="color" checked class="checkbox"> Цвета</label>
-                <label class="toggle-group bg-gray-100 px-2 rounded"><input type="radio" name="g2-mode" value="size" class="checkbox"> Размеры</label>
+                <label class="toggle-group bg-gray-100 px-2 rounded"><input type="radio" name="g2-mode" value="color" checked class="checkbox" onchange="toggleColorSelectors()"> Цвета</label>
+                <label class="toggle-group bg-gray-100 px-2 rounded"><input type="radio" name="g2-mode" value="size" class="checkbox" onchange="toggleColorSelectors()"> Размеры</label>
+                
+                <!-- Color Selectors -->
+                <div id="g2-colors-box" class="flex gap-2 ml-2 items-center bg-white border border-gray-200 rounded-lg px-2">
+                    <label><input type="checkbox" value="btn-red" checked class="g2-color-cb w-5 h-5 accent-red-500"></label>
+                    <label><input type="checkbox" value="btn-yellow" checked class="g2-color-cb w-5 h-5 accent-yellow-400"></label>
+                    <label><input type="checkbox" value="btn-blue" checked class="g2-color-cb w-5 h-5 accent-blue-600"></label>
+                    <label><input type="checkbox" value="btn-green" checked class="g2-color-cb w-5 h-5 accent-green-600"></label>
+                    <label><input type="checkbox" value="btn-pink" checked class="g2-color-cb w-5 h-5 accent-pink-500"></label>
+                </div>
+
                 <div class="border-l border-gray-300 mx-2 h-6"></div>
                 <span class="text-sm font-bold">Кол-во:</span>
                 <input type="range" id="g2-count" min="2" max="6" value="3" class="w-20">
@@ -207,11 +244,17 @@
         <div class="text-center pb-5 text-gray-400 font-bold text-xl">Нажми ПРОБЕЛ для генерации</div>
     </div>
 
-    <!-- Game 3: Cups (Custom Images Mode) -->
+    <!-- Game 3: Cups -->
     <div id="game-3" class="game-view hidden">
         <div class="header">
             <button onclick="backToMenu()" class="btn-back"><i class="fas fa-arrow-left"></i> Меню</button>
             <div class="settings-panel">
+                <label class="flex items-center space-x-1 cursor-pointer bg-blue-100 px-3 py-1 rounded-full hover:bg-blue-200 text-sm">
+                    <i class="fas fa-camera text-blue-600"></i>
+                    <span class="font-bold text-blue-700">Загрузить картинки (3 шт)</span>
+                    <input type="file" id="upload-cups-input" multiple accept="image/*" class="hidden">
+                </label>
+                <div class="border-l border-gray-300 mx-2 h-6"></div>
                 <span class="text-red-500 font-bold mr-2">Режим:</span>
                 <label class="toggle-group bg-gray-100 px-2 rounded"><input type="radio" name="g3-mode" value="row" checked class="checkbox"> Ряд</label>
                 <label class="toggle-group bg-gray-100 px-2 rounded"><input type="radio" name="g3-mode" value="tower" class="checkbox"> Башня</label>
@@ -228,6 +271,7 @@
     <script>
         let currentGame = 0;
         let currentAnswerSvg = ''; 
+        let customCupImages = []; 
 
         // Data
         const shapes = ['circle', 'square', 'triangle', 'rect'];
@@ -236,15 +280,11 @@
             { hex: '#FFEB3B', name: 'Желтый' }, 
             { hex: '#2196F3', name: 'Синий' }
         ]; 
-        // Color Code: Only 5 colors
-        const colorsCode = ['btn-red', 'btn-yellow', 'btn-blue', 'btn-green', 'btn-pink'];
         
-        // Cups Colors (Internal Logic) - these simulate "user images" if no file loaded
-        // In real use, user would replace these icons with <img src="red_toy.png"> etc.
         const cupsPalette = [
-            { id: 'red', border: 'border-red', content: '<i class="fas fa-cube text-red-500 cup-content"></i>' }, // Red Cube
-            { id: 'yellow', border: 'border-yellow', content: '<i class="fas fa-star text-yellow-400 cup-content"></i>' }, // Yellow Star
-            { id: 'blue', border: 'border-blue', content: '<i class="fas fa-shapes text-blue-500 cup-content"></i>' } // Blue Shapes
+            { id: 'red', border: 'border-red', content: '<i class="fas fa-cube text-red-500 cup-content"></i>' }, 
+            { id: 'yellow', border: 'border-yellow', content: '<i class="fas fa-star text-yellow-400 cup-content"></i>' }, 
+            { id: 'blue', border: 'border-blue', content: '<i class="fas fa-shapes text-blue-500 cup-content"></i>' } 
         ];
 
         // Navigation
@@ -272,12 +312,26 @@
         document.querySelectorAll('input').forEach(el => {
             if(el.type !== 'file') {
                 el.addEventListener('change', () => {
-                    if(currentGame !== 0 && el.id !== 'g1-negation') generate();
+                    // Logic to avoid double clicks
+                    if(currentGame !== 0 && el.id !== 'g1-negation' && el.id !== 'g1-tower') generate();
                 });
+            }
+        });
+        
+        document.getElementById('upload-cups-input').addEventListener('change', (e) => {
+            const files = e.target.files;
+            if(files.length > 0) {
+                customCupImages = [];
+                for(let i=0; i<Math.min(files.length, 3); i++) {
+                    customCupImages.push(URL.createObjectURL(files[i]));
+                }
+                alert(`Загружено ${customCupImages.length} картинки!`);
+                if(currentGame === 3) generateCups();
             }
         });
 
         function toggleNegationSettings() {
+            document.getElementById('g1-tower').checked = false; // Exclusive
             const isNeg = document.getElementById('g1-negation').checked;
             const propsDiv = document.getElementById('g1-props');
             if(isNeg) {
@@ -290,6 +344,28 @@
                propsDiv.classList.remove('opacity-50', 'pointer-events-none');
             }
             generateDienes();
+        }
+
+        function toggleTowerMode() {
+            document.getElementById('g1-negation').checked = false; // Exclusive
+            const propsDiv = document.getElementById('g1-props');
+            if(document.getElementById('g1-tower').checked) {
+                propsDiv.classList.add('opacity-50', 'pointer-events-none');
+            } else {
+                propsDiv.classList.remove('opacity-50', 'pointer-events-none');
+            }
+            generateDienes();
+        }
+        
+        function toggleColorSelectors() {
+            const mode = document.querySelector('input[name="g2-mode"]:checked').value;
+            const box = document.getElementById('g2-colors-box');
+            if (mode === 'size') {
+                box.classList.add('opacity-30', 'pointer-events-none');
+            } else {
+                box.classList.remove('opacity-30', 'pointer-events-none');
+            }
+            generateCode();
         }
 
         function generate() {
@@ -308,126 +384,216 @@
             const useSize = document.getElementById('g1-size').checked;
             const useThick = document.getElementById('g1-thick').checked;
             const useNegation = document.getElementById('g1-negation').checked;
+            const useTower = document.getElementById('g1-tower').checked;
 
-            btnReveal.classList.add('hidden');
+            // Helper to generate a random block
+            const getRandomBlock = () => {
+                return {
+                    shape: shapes[Math.floor(Math.random() * shapes.length)],
+                    colorObj: colorsDienes[Math.floor(Math.random() * 3)],
+                    isLarge: Math.random() > 0.5,
+                    isThick: Math.random() > 0.5
+                };
+            };
 
-            const targetShape = useShape ? shapes[Math.floor(Math.random() * shapes.length)] : 'circle';
-            const targetColorObj = useColor ? colorsDienes[Math.floor(Math.random() * 3)] : {hex: '#B0BEC5', name: 'Серый'};
-            const targetIsLarge = useSize ? Math.random() > 0.5 : true; 
-            const targetIsThick = useThick ? Math.random() > 0.5 : false; 
-
-            const depth = targetIsThick ? 60 : 10;
-            const sizeScale = targetIsLarge ? 1.2 : 0.7;
-            
-            let svg = '';
-            const fill = targetColorObj.hex;
-            const cx = 200, cy = 200;
-            
-            const draw3D = () => {
+            // Helper to Draw SVG
+            const getBlockSVG = (block, viewMode = '3d', offsetX = 0, offsetY = 0) => {
+                const depth = block.isThick ? (viewMode === 'top' ? 0 : 50) : (viewMode === 'top' ? 0 : 10);
+                const sizeScale = block.isLarge ? 1.0 : 0.6; 
+                const fill = block.colorObj.hex;
+                const cx = 100 + offsetX;
+                const cy = 100 + offsetY;
+                
                 let s = '';
-                if (targetShape === 'circle') {
-                    const r = 70 * sizeScale;
-                    s += `<path d="M${cx-r},${cy} A${r},${r/2} 0 0,0 ${cx+r},${cy} L${cx+r},${cy+depth} A${r},${r/2} 0 0,1 ${cx-r},${cy+depth} Z" fill="${fill}" class="shape-side" />`;
-                    s += `<ellipse cx="${cx}" cy="${cy+depth}" rx="${r}" ry="${r/2}" fill="${fill}" class="shape-side"/>`;
-                    s += `<ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r/2}" fill="${fill}" class="shape-face" />`;
-                } else if (targetShape === 'square') {
-                    const w = 120 * sizeScale; const x = cx - w/2; const y = cy - w/3;
-                    s += `<path d="M${x+w},${y} L${x+w+depth/2},${y-depth/2} L${x+w+depth/2},${y+w-depth/2} L${x+w},${y+w} Z" fill="${fill}" class="shape-side" />`;
-                    s += `<path d="M${x},${y} L${x+depth/2},${y-depth/2} L${x+w+depth/2},${y-depth/2} L${x+w},${y} Z" fill="${fill}" class="shape-side" />`;
-                    s += `<rect x="${x}" y="${y}" width="${w}" height="${w}" fill="${fill}" class="shape-face" />`;
-                } else if (targetShape === 'rect') {
-                    const w = 160 * sizeScale; const h = 80 * sizeScale; const x = cx - w/2; const y = cy - h/2;
-                    s += `<path d="M${x+w},${y} L${x+w+depth/2},${y-depth/2} L${x+w+depth/2},${y+h-depth/2} L${x+w},${y+h} Z" fill="${fill}" class="shape-side" />`;
-                    s += `<path d="M${x},${y} L${x+depth/2},${y-depth/2} L${x+w+depth/2},${y-depth/2} L${x+w},${y} Z" fill="${fill}" class="shape-side" />`;
-                    s += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" class="shape-face" />`;
-                } else if (targetShape === 'triangle') {
-                    const triSide = 140 * sizeScale; 
-                    const p1 = {x: cx, y: cy - triSide/1.5};
-                    const p2 = {x: cx + triSide/1.2, y: cy + triSide/2};
-                    const p3 = {x: cx - triSide/1.2, y: cy + triSide/2};
-                    const d = depth/2;
-                    s += `<path d="M${p1.x},${p1.y} L${p1.x+d},${p1.y-d} L${p2.x+d},${p2.y-d} L${p2.x},${p2.y} Z" fill="${fill}" class="shape-side" />`;
-                    s += `<polygon points="${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}" fill="${fill}" class="shape-face" />`;
+                
+                if (viewMode === 'top') {
+                    // Flat Top View
+                    if (block.shape === 'circle') s += `<circle cx="${cx}" cy="${cy}" r="${70*sizeScale}" fill="${fill}" stroke="#333" stroke-width="2" fill-opacity="0.9"/>`;
+                    else if (block.shape === 'square') s += `<rect x="${cx - 60*sizeScale}" y="${cy - 60*sizeScale}" width="${120*sizeScale}" height="${120*sizeScale}" fill="${fill}" stroke="#333" stroke-width="2" fill-opacity="0.9"/>`;
+                    else if (block.shape === 'rect') s += `<rect x="${cx - 80*sizeScale}" y="${cy - 40*sizeScale}" width="${160*sizeScale}" height="${80*sizeScale}" fill="${fill}" stroke="#333" stroke-width="2" fill-opacity="0.9"/>`;
+                    else if (block.shape === 'triangle') s += `<polygon points="${cx},${cy - 70*sizeScale} ${cx + 70*sizeScale},${cy + 50*sizeScale} ${cx - 70*sizeScale},${cy + 50*sizeScale}" fill="${fill}" stroke="#333" stroke-width="2" fill-opacity="0.9"/>`;
+                } 
+                else if (viewMode === 'side_profile') {
+                    // Side 3D profile for Tower
+                    const h = block.isThick ? 60 : 15;
+                    const w = block.isLarge ? 120 : 70;
+                    
+                    // Simple prism for side view
+                    // Front face
+                    s += `<rect x="${cx-w/2}" y="${cy-h/2}" width="${w}" height="${h}" fill="${fill}" stroke="#333" stroke-width="1" />`;
+                    // Top Face (Depth)
+                    s += `<path d="M${cx-w/2},${cy-h/2} L${cx-w/2+10},${cy-h/2-10} L${cx+w/2+10},${cy-h/2-10} L${cx+w/2},${cy-h/2} Z" fill="${fill}" stroke="#333" stroke-width="1" />`;
+                    // Right Face
+                    s += `<path d="M${cx+w/2},${cy-h/2} L${cx+w/2+10},${cy-h/2-10} L${cx+w/2+10},${cy+h/2-10} L${cx+w/2},${cy+h/2} Z" fill="${fill}" stroke="#333" stroke-width="1" />`;
+                }
+                else {
+                    // 3D View (Standard Single) - logic from v7 used if needed
                 }
                 return s;
             };
-            
-            currentAnswerSvg = draw3D();
 
-            if (useNegation) {
+            // --- TOWER MODE (Top View -> 3D Side Tower) ---
+            if (useTower) {
                 btnReveal.classList.remove('hidden');
-                let riddleCards = '';
-                const createCard = (contentHtml, isNot, label_text) => `
-                    <div class="riddle-card animate-pop">
-                        <div class="flex items-center justify-center h-full w-full p-2">${contentHtml}</div>
-                        ${isNot ? '<div class="negation-cross"></div>' : ''}
-                        <div class="card-label">${label_text}</div>
+                
+                const blocks = [getRandomBlock(), getRandomBlock(), getRandomBlock()];
+                
+                // 1. Top View (Overlay)
+                let topViewSvg = '';
+                blocks.forEach((b, i) => {
+                    const offX = (i - 1) * 20; // -20, 0, 20
+                    const offY = (i - 1) * 10;
+                    topViewSvg += getBlockSVG(b, 'top', offX, offY);
+                });
+                
+                let topHtml = `<div class="view-panel"><div class="view-label">ВИД СВЕРХУ</div>
+                                <svg width="250" height="250" viewBox="0 0 200 200">${topViewSvg}</svg>
+                               </div>`;
+
+                // 2. Side View (Tower) - Answer
+                let currentY = 220; 
+                let towerSvg = '';
+                
+                blocks.forEach((b, i) => {
+                    const h = b.isThick ? 60 : 15;
+                    const w = b.isLarge ? 120 : 70;
+                    const fill = b.colorObj.hex;
+                    const cx = 100;
+                    
+                    const offX = (i - 1) * 20;
+                    const yPos = currentY - h;
+                    
+                    towerSvg += `<rect x="${cx+offX-w/2}" y="${yPos}" width="${w}" height="${h}" fill="${fill}" stroke="#333" stroke-width="1" />`;
+                    towerSvg += `<path d="M${cx+offX-w/2},${yPos} L${cx+offX-w/2+10},${yPos-10} L${cx+offX+w/2+10},${yPos-10} L${cx+offX+w/2},${yPos} Z" fill="${fill}" stroke="#333" stroke-width="1" />`;
+                    towerSvg += `<path d="M${cx+offX+w/2},${yPos} L${cx+offX+w/2+10},${yPos-10} L${cx+offX+w/2+10},${yPos+h-10} L${cx+offX+w/2},${yPos+h} Z" fill="${fill}" stroke="#333" stroke-width="1" />`;
+                    
+                    currentY = yPos - 10; 
+                });
+                
+                let sideHtml = `<div class="view-panel"><div class="view-label">ОТВЕТ (СБОКУ)</div>
+                                  <svg width="250" height="300" viewBox="0 0 200 300">${towerSvg}</svg>
+                                </div>`;
+
+                canvas.innerHTML = `
+                    <div class="tower-container animate-pop">
+                        ${topHtml}
+                        <div id="answer-view" class="hidden mt-4">
+                            ${sideHtml}
+                        </div>
                     </div>
                 `;
+                return;
+            }
 
-                // 1. Color
-                {
-                    let isNot = Math.random() > 0.3;
-                    let displayColor = targetColorObj.hex;
-                    if(isNot) {
-                        const others = colorsDienes.filter(c => c.hex !== targetColorObj.hex);
-                        displayColor = others[Math.floor(Math.random()*others.length)].hex;
-                    }
-                    riddleCards += createCard(`<div class="w-16 h-16 rounded-full" style="background:${displayColor}"></div>`, isNot, 'Цвет');
+            // --- LOGIC SCHEME MODE (Negation) ---
+            if (useNegation) {
+                const block = getRandomBlock();
+                btnReveal.classList.remove('hidden');
+                
+                const depth = block.isThick ? 60 : 10;
+                const sizeScale = block.isLarge ? 1.2 : 0.7;
+                const fill = block.colorObj.hex;
+                const cx = 200, cy = 200;
+                let s3d = '';
+                
+                 if (block.shape === 'circle') {
+                    const r = 70 * sizeScale;
+                    s3d += `<path d="M${cx-r},${cy} A${r},${r/2} 0 0,0 ${cx+r},${cy} L${cx+r},${cy+depth} A${r},${r/2} 0 0,1 ${cx-r},${cy+depth} Z" fill="${fill}" class="shape-side" />`;
+                    s3d += `<ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r/2}" fill="${fill}" class="shape-face" />`;
+                } else {
+                    const w = 120 * sizeScale; const x = cx - w/2; const y = cy - w/3;
+                    s3d += `<path d="M${x+w},${y} L${x+w+depth/2},${y-depth/2} L${x+w+depth/2},${y+w-depth/2} L${x+w},${y+w} Z" fill="${fill}" class="shape-side" />`;
+                    s3d += `<path d="M${x},${y} L${x+depth/2},${y-depth/2} L${x+w+depth/2},${y-depth/2} L${x+w},${y} Z" fill="${fill}" class="shape-side" />`;
+                    s3d += `<rect x="${x}" y="${y}" width="${w}" height="${w}" fill="${fill}" class="shape-face" />`;
                 }
-                // 2. Shape
-                {
-                    let isNot = Math.random() > 0.3;
-                    let displayShape = targetShape;
-                    if(isNot) {
-                        const others = shapes.filter(s => s !== targetShape);
-                        displayShape = others[Math.floor(Math.random()*others.length)];
-                    }
-                    let shapeIcon = '';
-                    if(displayShape==='circle') shapeIcon='<div class="w-16 h-16 rounded-full bg-gray-400"></div>';
-                    if(displayShape==='square') shapeIcon='<div class="w-16 h-16 bg-gray-400"></div>';
-                    if(displayShape==='triangle') shapeIcon='<div style="width:0;height:0;border-left:35px solid transparent;border-right:35px solid transparent;border-bottom:60px solid #9CA3AF;"></div>';
-                    if(displayShape==='rect') shapeIcon='<div class="w-20 h-12 bg-gray-400"></div>';
-                    riddleCards += createCard(shapeIcon, isNot, 'Фигура');
+
+                // Generate Cards (Negation Logic)
+                let riddleCards = '';
+                const createCard = (html, isNot, label) => `
+                    <div class="riddle-card animate-pop">
+                        <div class="flex items-center justify-center h-full w-full p-2">${html}</div>
+                        ${isNot ? '<div class="negation-cross"></div>' : ''}
+                        <div class="card-label">${label}</div>
+                    </div>`;
+                
+                // Color Card
+                let isNotC = Math.random() > 0.3;
+                let dispC = block.colorObj.hex;
+                if(isNotC) {
+                    const others = colorsDienes.filter(c => c.hex !== block.colorObj.hex);
+                    dispC = others[Math.floor(Math.random()*others.length)].hex;
                 }
-                // 3. Size
-                {
-                    let isNot = Math.random() > 0.3;
-                    let showLarge = targetIsLarge;
-                    if(isNot) showLarge = !targetIsLarge;
-                    const iconLarge = `<div class="text-center"><i class="fas fa-building text-5xl text-gray-600"></i></div>`;
-                    const iconSmall = `<div class="text-center"><i class="fas fa-home text-3xl text-gray-600"></i></div>`;
-                    riddleCards += createCard(showLarge ? iconLarge : iconSmall, isNot, 'Размер');
+                riddleCards += createCard(`<div class="w-16 h-16 rounded-full" style="background:${dispC}"></div>`, isNotC, 'Цвет');
+
+                // Shape Card
+                let isNotS = Math.random() > 0.3;
+                let dispS = block.shape;
+                if(isNotS) {
+                    const others = shapes.filter(s => s !== block.shape);
+                    dispS = others[Math.floor(Math.random()*others.length)];
                 }
-                // 4. Thickness
-                {
-                    let isNot = Math.random() > 0.3;
-                    let showThick = targetIsThick;
-                    if(isNot) showThick = !targetIsThick;
-                    const iconThick = `<div class="flex flex-col items-center"><i class="fas fa-child text-5xl text-gray-700" style="transform: scaleX(2.5);"></i></div>`;
-                    const iconThin = `<div class="flex flex-col items-center"><i class="fas fa-child text-5xl text-gray-700" style="transform: scaleX(0.7);"></i></div>`;
-                    riddleCards += createCard(showThick ? iconThick : iconThin, isNot, 'Толщина');
-                }
+                let iconS = '';
+                if(dispS==='circle') iconS='<div class="w-12 h-12 rounded-full bg-gray-400"></div>';
+                if(dispS==='square') iconS='<div class="w-12 h-12 bg-gray-400"></div>';
+                if(dispS==='triangle') iconS='<div style="width:0;height:0;border-left:25px solid transparent;border-right:25px solid transparent;border-bottom:50px solid #9CA3AF;"></div>';
+                if(dispS==='rect') iconS='<div class="w-16 h-10 bg-gray-400"></div>';
+                riddleCards += createCard(iconS, isNotS, 'Фигура');
+
+                // Size
+                let isNotSz = Math.random() > 0.3;
+                let showLg = block.isLarge;
+                if(isNotSz) showLg = !block.isLarge;
+                const iconSz = showLg ? '<i class="fas fa-building text-5xl text-gray-600"></i>' : '<i class="fas fa-home text-3xl text-gray-600"></i>';
+                riddleCards += createCard(iconSz, isNotSz, 'Размер');
+
+                // Thick
+                let isNotTh = Math.random() > 0.3;
+                let showTh = block.isThick;
+                if(isNotTh) showTh = !block.isThick;
+                const iconTh = showTh ? '<i class="fas fa-child text-5xl text-gray-700" style="transform: scaleX(2.5);"></i>' : '<i class="fas fa-child text-5xl text-gray-700" style="transform: scaleX(0.7);"></i>';
+                riddleCards += createCard(iconTh, isNotTh, 'Толщина');
 
                 canvas.innerHTML = `
                     <div id="riddle-view" class="flex flex-col items-center justify-center flex-grow"><div class="riddle-grid">${riddleCards}</div></div>
                     <div id="answer-view" class="hidden animate-pop flex-grow flex items-center justify-center">
                         <div class="dienes-container relative flex justify-center items-center" style="width: 400px; height: 400px;">
-                            <svg viewBox="0 0 400 400" style="overflow: visible; width:100%; height:100%;">${currentAnswerSvg}</svg>
+                            <svg viewBox="0 0 400 400" style="overflow: visible; width:100%; height:100%;">${s3d}</svg>
                         </div>
                     </div>
                 `;
+
             } else {
+                // SINGLE MODE
+                btnReveal.classList.add('hidden');
+                const block = getRandomBlock();
+                const depth = block.isThick ? 60 : 10;
+                const sizeScale = block.isLarge ? 1.2 : 0.7;
+                const fill = block.colorObj.hex;
+                const cx = 200, cy = 200;
+                
+                let s3d = '';
+                 if (block.shape === 'circle') {
+                    const r = 70 * sizeScale;
+                    s3d += `<path d="M${cx-r},${cy} A${r},${r/2} 0 0,0 ${cx+r},${cy} L${cx+r},${cy+depth} A${r},${r/2} 0 0,1 ${cx-r},${cy+depth} Z" fill="${fill}" class="shape-side" />`;
+                    s3d += `<ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r/2}" fill="${fill}" class="shape-face" />`;
+                } else {
+                    // Fallback
+                    const w = 120 * sizeScale; const x = cx - w/2; const y = cy - w/3;
+                    s3d += `<path d="M${x+w},${y} L${x+w+depth/2},${y-depth/2} L${x+w+depth/2},${y+w-depth/2} L${x+w},${y+w} Z" fill="${fill}" class="shape-side" />`;
+                    s3d += `<path d="M${x},${y} L${x+depth/2},${y-depth/2} L${x+w+depth/2},${y-depth/2} L${x+w},${y} Z" fill="${fill}" class="shape-side" />`;
+                    s3d += `<rect x="${x}" y="${y}" width="${w}" height="${w}" fill="${fill}" class="shape-face" />`;
+                }
+
                 canvas.innerHTML = `
                     <div class="dienes-container relative flex justify-center items-center animate-pop flex-grow" style="width: 400px; height: 400px;">
-                        <svg viewBox="0 0 400 400" style="overflow: visible; width:100%; height:100%;">${currentAnswerSvg}</svg>
+                        <svg viewBox="0 0 400 400" style="overflow: visible; width:100%; height:100%;">${s3d}</svg>
                     </div>
                 `;
             }
         }
 
         function revealAnswer() {
-            document.getElementById('riddle-view').classList.add('hidden');
+            document.getElementById('riddle-view')?.classList.add('hidden');
             document.getElementById('answer-view').classList.remove('hidden');
         }
 
@@ -441,8 +607,13 @@
             let html = `<div class="seq-container ${isVertical ? 'seq-vertical' : ''}">`;
 
             if (mode === 'color') {
+                // Collect checked colors
+                const checkedBoxes = document.querySelectorAll('.g2-color-cb:checked');
+                let availableColors = Array.from(checkedBoxes).map(cb => cb.value);
+                if (availableColors.length === 0) availableColors = ['btn-red']; // Fallback
+
                 for(let i=0; i<count; i++) {
-                    const c = colorsCode[Math.floor(Math.random() * colorsCode.length)];
+                    const c = availableColors[Math.floor(Math.random() * availableColors.length)];
                     html += `<div class="size-wrapper animate-pop" style="animation-delay: ${i*0.1}s"><div class="btn-3d ${c} size-mode-lg"><div class="btn-number">${i+1}</div></div></div>`;
                 }
             } else {
@@ -464,16 +635,13 @@
             
             let html = '';
             
-            // Logic to prevent repeat colors (if count <= 3)
             const getUniqueColors = (n) => {
                 let pool = [...cupsPalette];
                 let result = [];
                 for(let i=0; i<n; i++) {
-                    if(pool.length === 0) pool = [...cupsPalette]; // refill if needed
+                    if(pool.length === 0) pool = [...cupsPalette]; 
                     const idx = Math.floor(Math.random() * pool.length);
-                    // Avoid immediate repeat if pool refilled
                     if(result.length > 0 && pool[idx].id === result[result.length-1].id && pool.length > 1) {
-                        // try next
                         const nextIdx = (idx + 1) % pool.length;
                         result.push(pool[nextIdx]);
                         pool.splice(nextIdx, 1);
@@ -486,13 +654,22 @@
             };
 
             const createCup = (colorObj, delay) => {
-                // Use "built-in" icons (images) instead of cups
+                let content = '';
+                if(customCupImages.length > 0) {
+                    let imgIdx = 0;
+                    if(colorObj.id === 'red') imgIdx = 0;
+                    if(colorObj.id === 'yellow') imgIdx = 1;
+                    if(colorObj.id === 'blue') imgIdx = 2;
+                    if(imgIdx >= customCupImages.length) imgIdx = 0;
+                    
+                    content = `<img src="${customCupImages[imgIdx]}" class="cup-img">`;
+                } else {
+                    content = colorObj.content;
+                }
                 return `<div class="cup-card ${colorObj.border} animate-pop" style="animation-delay:${delay}s">
-                            ${colorObj.content}
+                            ${content}
                         </div>`;
             };
-
-            // Generate Colors sequence
             
             if (mode === 'row') {
                 const colors = getUniqueColors(count);
